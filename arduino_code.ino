@@ -33,52 +33,42 @@ String value;
 
 void setup() {
   Serial.begin(9600);
-  Serial.println(F("DHTxx test!"));
+  Serial.println(F("Start DHT-11 reading!"));
  
   dht.begin();
   
 }
-
+//main loop (reading temp and hum every 2000ms)
 void loop() {
   // Wait a few seconds between measurements.
   delay(2000);
-
-
 
   // Reading temperature or humidity takes about 250 milliseconds!
   // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
   float h = dht.readHumidity();
   // Read temperature as Celsius (the default)
   float t = dht.readTemperature();
-  // Read temperature as Fahrenheit (isFahrenheit = true)
-  float f = dht.readTemperature(true);
 
   // Check if any reads failed and exit early (to try again).
-  if (isnan(h) || isnan(t) || isnan(f)) {
-    Serial.println(F("Failed to read from DHT sensor!"));
+  if (isnan(h) || isnan(t)) {
+    Serial.println(F("Failed to read from DHT-11 sensor!"));
     return;
   }
-
+// reading strings GET HUM & GET TEMP from console
 while(Serial.available() > 0 ){
     String str = Serial.readString();
-    if(str.indexOf("GET HUM") > -1){
-      //Serial.print(F("Humidity: "));
-      Serial.print(h);
-      //Serial.println(F("%"));
-    }
-    if(str.indexOf("GET TEMP") > -1){
-      //Serial.print(F("Temperature: "));
-      Serial.print(t);
-      //Serial.println(F("°C"));
+    if(str == "GET HUM\n")
+    {
+      Serial.println(h);
+       }
+    if(str == "GET TEMP\n")
+    {
+      Serial.println(t);
     }
    
   }
-  // Compute heat index in Fahrenheit (the default)
-  //float hif = dht.computeHeatIndex(f, h);
-  // Compute heat index in Celsius (isFahreheit = false)
-  // float hic = dht.computeHeatIndex(t, h, false);
- 
 }
+
 
  /* Serial.print(F("Humidity: "));
   Serial.print(h);
